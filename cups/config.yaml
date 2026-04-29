@@ -19,8 +19,10 @@ map:
 init: false
 ports:
   631/tcp: 631
+  8099/tcp: 8099
 ports_description:
   631/tcp: CUPS web interface and printing port
+  8099/tcp: Upload and print web UI
 options:
   admin_username: "admin"
   admin_password: "admin"

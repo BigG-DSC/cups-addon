@@ -47,7 +47,7 @@ Listen 0.0.0.0:631
   Allow 192.168.0.0/16
 </Location>
 
-<Limit Send-Document Send-URI Hold-Job Release-Job Restart-Job Purge-Jobs Set-Job-Attributes Create-Job-Subscription Renew-Subscription Cancel-Subscription Get-Notifications Reprocess-Job Cancel-Current-Job Suspend-Current-Job Resume-Job Cancel-My-Jobs Close-Job CUPS-Move-Job CUPS-Get-Document>
+<Limit Print-Job Validate-Job Create-Job Send-Document Send-URI Hold-Job Release-Job Restart-Job Purge-Jobs Set-Job-Attributes Create-Job-Subscription Renew-Subscription Cancel-Subscription Get-Notifications Reprocess-Job Cancel-Current-Job Suspend-Current-Job Resume-Job Cancel-My-Jobs Close-Job CUPS-Move-Job CUPS-Get-Document>
   Order allow,deny
   Allow localhost
   Allow 10.0.0.0/8
@@ -101,6 +101,9 @@ fi
 # Verify printer drivers are available
 echo "Available printer drivers:"
 lpinfo -m 2>/dev/null | head -20 || echo "CUPS not yet running; drivers will be listed after start."
+
+# Start lightweight upload web UI in background
+python3 /usr/local/bin/upload_print_server.py &
 
 # Start CUPS service
 /usr/sbin/cupsd -f

@@ -22,7 +22,9 @@ RUN \
         gcompat \
         libstdc++ \
         dpkg \
-        jq && \
+        jq \
+        python3 \
+        py3-flask && \
     for pkg in \
         epson-inkjet-printer-escpr \
         hplip \
@@ -34,9 +36,11 @@ RUN \
 
 # Copy data
 COPY rootfs /
+RUN chmod +x /usr/local/bin/upload_print_server.py
 
 # Expose CUPS web interface port
 EXPOSE 631
+EXPOSE 8099
 
 HEALTHCHECK \
     CMD lpstat -r || exit 1
