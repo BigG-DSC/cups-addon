@@ -1,4 +1,4 @@
-ARG BUILD_FROM
+ARG BUILD_FROM=alpine:3.22
 FROM $BUILD_FROM
 
 # Add env
@@ -12,8 +12,6 @@ ENV CUPS_SERVERROOT=/data/cups/config
 
 # Setup base
 RUN \
-    echo "http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main" > /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community" >> /etc/apk/repositories && \
     apk update && \
     apk add --no-cache \
         cups \
@@ -21,15 +19,18 @@ RUN \
         ghostscript \
         libjpeg-turbo \
         net-snmp \
+        gcompat \
+        libstdc++ \
+        dpkg \
+        jq && \
+    for pkg in \
         epson-inkjet-printer-escpr \
         hplip \
         gutenprint \
         foomatic-db \
-        foomatic-db-ppds \
-        gcompat \
-        libstdc++ \
-        dpkg \
-        jq
+        foomatic-db-ppds; do \
+        apk add --no-cache "${pkg}" || echo "Optional package not available on this architecture/release: ${pkg}"; \
+    done
 
 # Copy data
 COPY rootfs /
